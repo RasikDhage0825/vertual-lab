@@ -12,9 +12,9 @@ export default async function handler(req, res) {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     
-    // Model select karte waqt systemInstruction add karenge (Teacher mode ke liye)
+    
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash", // Flash model fast aur sasta hai
+        model: "gemini-pro", 
         systemInstruction: systemPrompt || "You are a helpful assistant.",
     });
 
@@ -35,4 +35,5 @@ export default async function handler(req, res) {
     console.error("Gemini API Error:", error);
     return res.status(500).json({ error: error.message });
   }
+
 }
