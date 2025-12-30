@@ -2707,7 +2707,7 @@ Consider the context: They are building electronic circuits and may be stuck on 
             friendLoadingIndicator.classList.remove('hidden');
         
             try {
-                const geminiKaJawab = await sendMessageToGemini(userKaMessage);
+                const geminiKaJawab = await sendMessageToGemini({userQuery:userKaMessage});
                         
                 // Add bot response to the friend response area
                 friendResponseArea.innerHTML += `<p class="chat-bubble text-gray-700 text-sm">Bot: ${geminiKaJawab}</p>`;
@@ -2745,7 +2745,7 @@ Consider the context: They are building electronic circuits and may be stuck on 
                 friendLoadingIndicator.classList.remove('hidden');
         
                 try {
-                    const geminiKaJawab = await sendMessageToGemini(userKaMessage);
+                    const geminiKaJawab = await sendMessageToGemini({userQuery:userKaMessage});
                             
                     // Add bot response to the friend response area
                     friendResponseArea.innerHTML += `<p class="chat-bubble text-gray-700 text-sm">Bot: ${geminiKaJawab}</p>`;
