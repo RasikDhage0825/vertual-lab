@@ -1,0 +1,6 @@
+{
+  "name": "mera-bot",
+  "dependencies": {
+    "@google/generative-ai": "latest"
+  }
+}
