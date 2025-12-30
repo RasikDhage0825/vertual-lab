@@ -468,36 +468,32 @@
         const API_KEY = ""; // PASTE YOUR GENERATED GEMINI KEY HERE
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
         
-        // Function to send messages to backend API instead of direct Gemini API call
-        async function sendMessageToGemini(message) {
+        // Is function ko apne purane sendMessageToGemini se replace kar de
+async function sendMessageToGemini(payloadObj) {
+  try {
+    const response = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Hum direct object bhejenge, "userPrompt" ke andar wrap nahi karenge
+      body: JSON.stringify(payloadObj),
+    });
 
-          try {
+    const data = await response.json();
+    
+    if (data.error) {
+        console.error("Backend Error:", data.error);
+        return "API_ERROR";
+    }
 
-            const response = await fetch('/api/gemini', {
+    return data.reply;
 
-              method: 'POST',
-
-              headers: {
-
-                'Content-Type': 'application/json',
-
-              },
-
-              body: JSON.stringify({ userPrompt: message }),
-
-            });
-
-
-            const data = await response.json();
-            console.log("Gemini ka jawab:", data.reply);
-            return data.reply;
-
-
-          } catch (error) {
-
-            console.error("Error aaya:", error);
-          }
-        }
+  } catch (error) {
+    console.error("Network Error:", error);
+    return "API_ERROR";
+  }
+}
         
         // --- Circuit State Management ---
         const GRID_SIZE = 50; // Size of the snap-to grid in pixels
@@ -2172,7 +2168,8 @@
             };
             
             try {
-                const text = await sendMessageToGemini(JSON.stringify(message));
+             
+                    const text = await sendMessageToGemini(message);
                 
                 // Display response for non-JSON formatted text
                 if (text && text !== "API_ERROR") {
@@ -2468,7 +2465,8 @@ Consider the context: They are building electronic circuits and may be stuck on 
                     generationConfig: sentimentPayload.generationConfig
                 };
                 
-                const responseText = await sendMessageToGemini(JSON.stringify(sentimentMessage));
+                
+             const responseText = await sendMessageToGemini(sentimentMessage);
                 
                 if (responseText && responseText !== "API_ERROR") {
                     // Attempt to parse the response as JSON
