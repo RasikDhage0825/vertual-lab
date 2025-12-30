@@ -7,23 +7,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Frontend se hume ab multiple cheezein milengi
     const { systemPrompt, userQuery, generationConfig } = req.body;
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     
-    
+    // CHANGE 1: Wapas sabse stable "gemini-pro" model par aa gaye
+    // CHANGE 2: "systemInstruction" hata diya (kyunki ye model support nahi karta)
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash", 
-        systemInstruction: systemPrompt || "You are a helpful assistant.",
+        model: "gemini-pro" 
     });
 
-    // Agar frontend ne koi special config (JSON mode) bheja hai to wo use karenge
-    const chatConfig = generationConfig || {};
+    // TRICK: Teacher/Friend ka dimaag hum sawal ke saath jod kar bhejenge
+    const finalPrompt = `${systemPrompt}\n\nUser Question: ${userQuery}`;
 
     const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: userQuery }] }],
-        generationConfig: chatConfig
+        contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
+        generationConfig: generationConfig || {}
     });
 
     const response = await result.response;
@@ -35,6 +34,4 @@ export default async function handler(req, res) {
     console.error("Gemini API Error:", error);
     return res.status(500).json({ error: error.message });
   }
-
 }
-
